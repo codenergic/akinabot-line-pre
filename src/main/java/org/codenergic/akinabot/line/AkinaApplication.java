@@ -1,5 +1,6 @@
 package org.codenergic.akinabot.line;
 
+import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
@@ -22,9 +23,15 @@ public class AkinaApplication {
         SpringApplication.run(AkinaApplication.class, args);
     }
     @EventMapping
-    public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
+    public ReplyMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
         LOG.info("event: {}", event);
-        return new TextMessage(event.getMessage().getText());
+        TextMessage textMessage = new TextMessage("hello");
+        ReplyMessage replyMessage = new ReplyMessage(
+                event.getReplyToken(),
+                textMessage
+        );
+
+        return replyMessage;
     }
 
     @EventMapping
