@@ -56,7 +56,8 @@ public class AkinabotLineMessageHandler {
                 redisTemplate.opsForHash().put(event.getSource().getUserId(), "stepinformation", stepInformation);
                 if (Double.parseDouble(stepInformation.getProgression()) >= 90D || Integer.parseInt(stepInformation.getStep()) >= 30) {
                     ListResponse listResponse = akinatorApiService.getResult(identification, stepInformation);
-                    String image = listResponse.getParameters().getElements().get(0).getElement().getAbsolutePicturePath();
+                    //String image = listResponse.getParameters().getElements().get(0).getElement().getAbsolutePicturePath();
+                    String image = "https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2014/10/1413656945leveldb.png";
                     String character = listResponse.getParameters().getElements().get(0).getElement().getName();
                     LOG.info("Answer {}", listResponse);
                     return new ImageMessage(image, image);
