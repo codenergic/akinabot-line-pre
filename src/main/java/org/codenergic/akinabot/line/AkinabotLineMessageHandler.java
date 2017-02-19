@@ -3,7 +3,6 @@ package org.codenergic.akinabot.line;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
-import com.linecorp.bot.model.message.ImageMessage;
 import com.linecorp.bot.model.message.ImagemapMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import sun.rmi.runtime.Log;
 
 import java.util.Map;
 
@@ -56,11 +54,11 @@ public class AkinabotLineMessageHandler {
                 stepInformation.setStep(answerResponse.getParameters().getStep());
                 stepInformation.setProgression(answerResponse.getParameters().getProgression());
                 redisTemplate.opsForHash().put(event.getSource().getUserId(), "stepinformation", stepInformation);
-                if (Long.parseLong(stepInformation.getQuestion()) >= 90D || Integer.parseInt(stepInformation.getStep()) >= 30) {
+                if (Long.parseLong(stepInformation.getProgression()) >= 90D || Integer.parseInt(stepInformation.getStep()) >= 30) {
                     ListResponse listResponse = akinatorApiService.getResult(identification, stepInformation);
                     String image = listResponse.getParameters().getElements().get(0).getElement().getAbsolutePicturePath();
                     String character = listResponse.getParameters().getElements().get(0).getElement().getPseudo();
-                    ImagemapBaseSize imagemapBaseSize = new ImagemapBaseSize(300,300);
+                    ImagemapBaseSize imagemapBaseSize = new ImagemapBaseSize(300, 300);
                     ImagemapMessage imagemapMessage = new ImagemapMessage(image, character, imagemapBaseSize, null);
                     return imagemapMessage;
                 } else {
