@@ -1,6 +1,8 @@
 package org.codenergic.akinabot.line.model.akinator;
 
-public class Answer {
+import java.io.Serializable;
+
+public class Answer implements Serializable{
 	private int ordinal;
 	private String answer;
 
