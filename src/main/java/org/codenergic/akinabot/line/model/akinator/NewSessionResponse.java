@@ -42,7 +42,15 @@ public class NewSessionResponse {
 		public void setStepInformation(StepInformation stepInformation) {
 			this.stepInformation = stepInformation;
 		}
-	}
+
+        @Override
+        public String toString() {
+            return "NewSessionParameters{" +
+                    "identification=" + identification +
+                    ", stepInformation=" + stepInformation +
+                    '}';
+        }
+    }
 
 	@Override
 	public String toString() {

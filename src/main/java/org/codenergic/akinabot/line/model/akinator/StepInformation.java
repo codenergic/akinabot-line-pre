@@ -70,4 +70,17 @@ public class StepInformation {
 	public void setStatusMinibase(String statusMinibase) {
 		this.statusMinibase = statusMinibase;
 	}
+
+    @Override
+    public String toString() {
+        return "StepInformation{" +
+                "question='" + question + '\'' +
+                ", answers=" + answers +
+                ", step='" + step + '\'' +
+                ", progression='" + progression + '\'' +
+                ", questionid='" + questionid + '\'' +
+                ", infogain='" + infogain + '\'' +
+                ", statusMinibase='" + statusMinibase + '\'' +
+                '}';
+    }
 }

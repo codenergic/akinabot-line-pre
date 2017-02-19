@@ -45,5 +45,21 @@ public class ListResponse {
 		public void setNbObjetsPertinents(String nbObjetsPertinents) {
 			this.nbObjetsPertinents = nbObjetsPertinents;
 		}
-	}
+
+        @Override
+        public String toString() {
+            return "ListParameters{" +
+                    "elements=" + elements +
+                    ", nbObjetsPertinents='" + nbObjetsPertinents + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ListResponse{" +
+                "completion='" + completion + '\'' +
+                ", parameters=" + parameters +
+                '}';
+    }
 }

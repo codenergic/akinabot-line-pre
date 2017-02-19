@@ -128,5 +128,30 @@ public class Elements {
 		public void setAbsolutePicturePath(String absolutePicturePath) {
 			this.absolutePicturePath = absolutePicturePath;
 		}
+
+		@Override
+		public String toString() {
+			return "Element{" +
+					"id='" + id + '\'' +
+					", name='" + name + '\'' +
+					", idBase='" + idBase + '\'' +
+					", proba='" + proba + '\'' +
+					", description='" + description + '\'' +
+					", valideContrainte='" + valideContrainte + '\'' +
+					", ranking='" + ranking + '\'' +
+					", minibaseAddable='" + minibaseAddable + '\'' +
+					", relativeId='" + relativeId + '\'' +
+					", pseudo='" + pseudo + '\'' +
+					", picturePath='" + picturePath + '\'' +
+					", absolutePicturePath='" + absolutePicturePath + '\'' +
+					'}';
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Elements{" +
+				"element=" + element +
+				'}';
 	}
 }

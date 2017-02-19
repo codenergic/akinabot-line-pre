@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import sun.rmi.runtime.Log;
 
 /**
  * Created by diasa on 2/19/17.
@@ -30,11 +31,11 @@ public class AkinabotLineMessageHandler {
     @EventMapping
     public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
         LOG.info("handleTextMessageEvent: {}", event);
-        if (Akinabot.BUTTON_START.equalsIgnoreCase(event.getMessage().getText())){
+        if (Akinabot.BUTTON_START.equalsIgnoreCase(event.getMessage().getText())) {
             try {
                 NewSessionResponse newSessionResponse = akinatorApiService.sendOpenSession();
-                if ("OK".equalsIgnoreCase(newSessionResponse.getCompletion())){
-                    redisTemplate.boundValueOps(newSessionResponse.getParameters().getIdentification().getSession()).set(newSessionResponse);
+                if ("OK".equalsIgnoreCase(newSessionResponse.getCompletion())) {
+                    LOG.info("NewSessionResponse {}", newSessionResponse);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

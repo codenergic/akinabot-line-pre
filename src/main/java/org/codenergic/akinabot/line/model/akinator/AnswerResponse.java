@@ -19,4 +19,6 @@ public class AnswerResponse {
 	public void setParameters(StepInformation parameters) {
 		this.parameters = parameters;
 	}
+
+
 }

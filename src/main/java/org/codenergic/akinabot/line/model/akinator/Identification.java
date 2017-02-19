@@ -28,4 +28,13 @@ public class Identification {
 	public void setSignature(String signature) {
 		this.signature = signature;
 	}
+
+    @Override
+    public String toString() {
+        return "Identification{" +
+                "channel=" + channel +
+                ", session='" + session + '\'' +
+                ", signature='" + signature + '\'' +
+                '}';
+    }
 }
