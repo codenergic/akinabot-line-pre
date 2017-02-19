@@ -23,6 +23,7 @@ public class BaseConfiguration {
         return restTemplateBuilder.build();
     }
 
+    @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
