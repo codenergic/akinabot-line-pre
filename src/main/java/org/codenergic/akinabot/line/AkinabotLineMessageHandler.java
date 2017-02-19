@@ -3,6 +3,7 @@ package org.codenergic.akinabot.line;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.message.ImageMessage;
 import com.linecorp.bot.model.message.ImagemapMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
@@ -59,8 +60,8 @@ public class AkinabotLineMessageHandler {
                     String image = listResponse.getParameters().getElements().get(0).getElement().getAbsolutePicturePath();
                     String character = listResponse.getParameters().getElements().get(0).getElement().getPseudo();
                     ImagemapBaseSize imagemapBaseSize = new ImagemapBaseSize(300, 300);
-                    ImagemapMessage imagemapMessage = new ImagemapMessage(image, character, imagemapBaseSize, null);
-                    return imagemapMessage;
+                    ImageMessage imageMessage = new ImageMessage(image, image);
+                    return imageMessage;
                 } else {
                     return new TextMessage(answerResponse.getParameters().getQuestion());
                 }
