@@ -1,4 +1,4 @@
-package org.codenergic.akinabot.line;
+package org.codenergic.akinabot.line.controller;
 
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.event.Event;
@@ -12,6 +12,7 @@ import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+import org.codenergic.akinabot.line.Akinabot;
 import org.codenergic.akinabot.line.model.akinator.*;
 import org.codenergic.akinabot.line.service.AkinatorApiService;
 import org.slf4j.Logger;
@@ -57,7 +58,8 @@ public class AkinabotLineMessageHandler {
                 if (Double.parseDouble(stepInformation.getProgression()) >= 90D || Integer.parseInt(stepInformation.getStep()) >= 30) {
                     ListResponse listResponse = akinatorApiService.getResult(identification, stepInformation);
                     //String image = listResponse.getParameters().getElements().get(0).getElement().getAbsolutePicturePath();
-                    String image = "https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2014/10/1413656945leveldb.png";
+                    String picturePath = listResponse.getParameters().getElements().get(0).getElement().getPicturePath();
+                    String image = "https://serene-harbor-93578.herokuapp.com/akina/images?path="+picturePath;
                     String character = listResponse.getParameters().getElements().get(0).getElement().getName();
                     LOG.info("Answer {}", listResponse);
                     return new ImageMessage(image, image);
