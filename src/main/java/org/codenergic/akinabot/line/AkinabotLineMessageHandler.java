@@ -63,7 +63,7 @@ public class AkinabotLineMessageHandler {
                     String character = listResponse.getParameters().getElements().get(0).getElement().getPseudo();
                     ImagemapBaseSize imagemapBaseSize = new ImagemapBaseSize(300, 300);
                     ImageMessage imageMessage = new ImageMessage(image, image);
-                    return imageMessage;
+                    return new TextMessage(character);
                 } else {
                     return new TextMessage(answerResponse.getParameters().getQuestion());
                 }
