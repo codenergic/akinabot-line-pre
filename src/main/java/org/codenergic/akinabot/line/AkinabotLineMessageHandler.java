@@ -11,34 +11,32 @@ import org.codenergic.akinabot.line.service.AkinatorApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import org.springframework.data.redis.core.RedisTemplate;
 
 /**
  * Created by diasa on 2/19/17.
  */
 @LineMessageHandler
-public class AknaBotLineMessageHandler {
+public class AkinabotLineMessageHandler {
 
     public static final Logger LOG = LoggerFactory.getLogger(Akinabot.class);
 
     @Autowired
     private AkinatorApiService akinatorApiService;
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
     @EventMapping
     public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
         LOG.info("handleTextMessageEvent: {}", event);
         if (Akinabot.BUTTON_START.equalsIgnoreCase(event.getMessage().getText())){
             try {
-                Future<NewSessionResponse> future = akinatorApiService.sendOpenSession();
-                while (!future.isDone()) {
-                    LOG.info("handleTextMessageEvent: {}", future.get().toString());
-                    Thread.sleep(10);
+                NewSessionResponse newSessionResponse = akinatorApiService.sendOpenSession();
+                if ("OK".equalsIgnoreCase(newSessionResponse.getCompletion())){
+                    redisTemplate.boundValueOps(newSessionResponse.getParameters().getIdentification().getSession()).set(newSessionResponse);
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
                 e.printStackTrace();
             }
         }

@@ -8,14 +8,13 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * Created by diasa on 2/18/17.
  */
 @SpringBootApplication
-@EnableAsync
 public class Akinabot {
     public static final String AKINATOR_API_URL = "http://api-en4.akinator.com";
 
     public static final String BUTTON_PLAYAGAIN = "Play Again";
     public static final String BUTTON_PLAYNOW = "Play Now";
     public static final String BUTTON_QUIT = "Quit";
-    public static final String BUTTON_START = "start";
+    public static final String BUTTON_START = "Start";
 
     public static void main(String [] args) {
         SpringApplication.run(Akinabot.class, args);
