@@ -58,6 +58,7 @@ public class AkinabotLineMessageHandler {
                     ListResponse listResponse = akinatorApiService.getResult(identification, stepInformation);
                     String image = listResponse.getParameters().getElements().get(0).getElement().getAbsolutePicturePath();
                     String character = listResponse.getParameters().getElements().get(0).getElement().getPseudo();
+                    LOG.info("Answer {}", listResponse);
                     return new TextMessage(character);
                 } else {
                     return new TextMessage(answerResponse.getParameters().getQuestion());
