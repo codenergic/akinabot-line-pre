@@ -57,9 +57,9 @@ public class AkinabotLineMessageHandler {
                 if (Double.parseDouble(stepInformation.getProgression()) >= 90D || Integer.parseInt(stepInformation.getStep()) >= 30) {
                     ListResponse listResponse = akinatorApiService.getResult(identification, stepInformation);
                     String image = listResponse.getParameters().getElements().get(0).getElement().getAbsolutePicturePath();
-                    String character = listResponse.getParameters().getElements().get(0).getElement().getPseudo();
+                    String character = listResponse.getParameters().getElements().get(0).getElement().getName();
                     LOG.info("Answer {}", listResponse);
-                    return new TextMessage(character);
+                    return new ImageMessage(image, image);
                 } else {
                     return new TextMessage(answerResponse.getParameters().getQuestion());
                 }
