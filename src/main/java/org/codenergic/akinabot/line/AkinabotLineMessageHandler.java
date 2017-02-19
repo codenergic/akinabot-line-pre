@@ -3,7 +3,11 @@ package org.codenergic.akinabot.line;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.message.ImageMessage;
+import com.linecorp.bot.model.message.ImagemapMessage;
+import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 import org.codenergic.akinabot.line.model.akinator.*;
@@ -31,17 +35,17 @@ public class AkinabotLineMessageHandler {
     private RedisTemplate<String, Object> redisTemplate;
 
     @EventMapping
-    public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws InterruptedException {
+    public Message handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws InterruptedException {
         LOG.info("handleTextMessageEvent: {}", event);
         if (Akinabot.BUTTON_START.equalsIgnoreCase(event.getMessage().getText())) {
 
-                NewSessionResponse newSessionResponse = akinatorApiService.sendOpenSession();
-                if ("OK".equalsIgnoreCase(newSessionResponse.getCompletion())) {
-                    LOG.info("NewSessionResponse {}", newSessionResponse);
-                    redisTemplate.opsForHash().put(event.getSource().getUserId(), "identification", newSessionResponse.getParameters().getIdentification());
-                    redisTemplate.opsForHash().put(event.getSource().getUserId(), "stepinformation", newSessionResponse.getParameters().getStepInformation());
-                    return new TextMessage(newSessionResponse.getParameters().getStepInformation().getQuestion());
-                }
+            NewSessionResponse newSessionResponse = akinatorApiService.sendOpenSession();
+            if ("OK".equalsIgnoreCase(newSessionResponse.getCompletion())) {
+                LOG.info("NewSessionResponse {}", newSessionResponse);
+                redisTemplate.opsForHash().put(event.getSource().getUserId(), "identification", newSessionResponse.getParameters().getIdentification());
+                redisTemplate.opsForHash().put(event.getSource().getUserId(), "stepinformation", newSessionResponse.getParameters().getStepInformation());
+                return new TextMessage(newSessionResponse.getParameters().getStepInformation().getQuestion());
+            }
 
         } else {
             Map<Object, Object> sessionInfo = redisTemplate.opsForHash().entries(event.getSource().getUserId());
@@ -52,9 +56,13 @@ public class AkinabotLineMessageHandler {
                 stepInformation.setStep(answerResponse.getParameters().getStep());
                 stepInformation.setProgression(answerResponse.getParameters().getProgression());
                 redisTemplate.opsForHash().put(event.getSource().getUserId(), "stepinformation", stepInformation);
-                if (Integer.parseInt(stepInformation.getStep()) >= 30) {
+                if (Long.parseLong(stepInformation.getQuestion()) >= 90D || Integer.parseInt(stepInformation.getStep()) >= 30) {
                     ListResponse listResponse = akinatorApiService.getResult(identification, stepInformation);
-                    LOG.info("Result {}", listResponse);
+                    String image = listResponse.getParameters().getElements().get(0).getElement().getAbsolutePicturePath();
+                    String character = listResponse.getParameters().getElements().get(0).getElement().getPseudo();
+                    ImagemapBaseSize imagemapBaseSize = new ImagemapBaseSize(300,300);
+                    ImagemapMessage imagemapMessage = new ImagemapMessage(image, character, imagemapBaseSize, null);
+                    return imagemapMessage;
                 } else {
                     return new TextMessage(answerResponse.getParameters().getQuestion());
                 }
