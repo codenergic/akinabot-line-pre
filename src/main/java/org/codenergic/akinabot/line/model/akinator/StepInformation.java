@@ -2,10 +2,11 @@ package org.codenergic.akinabot.line.model.akinator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepInformation {
+public class StepInformation implements Serializable {
 	private String question;
 	private List<Answer> answers = new ArrayList<>();
 	private String step;

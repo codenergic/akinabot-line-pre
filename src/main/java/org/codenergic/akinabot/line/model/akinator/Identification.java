@@ -1,6 +1,8 @@
 package org.codenergic.akinabot.line.model.akinator;
 
-public class Identification {
+import java.io.Serializable;
+
+public class Identification implements Serializable{
 	private long channel;
 	private String session;
 	private String signature;
