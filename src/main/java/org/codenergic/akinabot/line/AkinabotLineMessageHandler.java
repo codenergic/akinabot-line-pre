@@ -1,5 +1,6 @@
 package org.codenergic.akinabot.line;
 
+import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
@@ -8,6 +9,7 @@ import com.linecorp.bot.model.message.ImagemapMessage;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.imagemap.ImagemapBaseSize;
+import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 import org.codenergic.akinabot.line.model.akinator.*;
@@ -69,6 +71,7 @@ public class AkinabotLineMessageHandler {
         }
         return null;
     }
+
 
     @EventMapping
     public void handleDefaultMessageEvent(Event event) {

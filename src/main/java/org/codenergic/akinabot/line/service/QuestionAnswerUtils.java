@@ -47,7 +47,7 @@ public final class QuestionAnswerUtils {
 
 	public static String buildResultUrl(String session, String signature, String step) {
 		return new StringBuilder(Akinabot.AKINATOR_API_URL)
-				.append("/ws/list?&size=2&max_pic_width=300&max_pic_height=300&pref_photos=VO-OK&mode_question=0")
+				.append("/ws/list?&size=2&max_pic_width=240&max_pic_height=240&pref_photos=VO-OK&mode_question=0")
 				.append("&session=").append(session)
 				.append("&signature=").append(signature)
 				.append("&step=").append(step)
