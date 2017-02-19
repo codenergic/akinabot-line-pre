@@ -37,9 +37,7 @@ public class AkinabotLineMessageHandler {
 
     @EventMapping
     public Message handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws InterruptedException {
-        LOG.info("handleTextMessageEvent: {}", event);
         if (Akinabot.BUTTON_START.equalsIgnoreCase(event.getMessage().getText())) {
-
             NewSessionResponse newSessionResponse = akinatorApiService.sendOpenSession();
             if ("OK".equalsIgnoreCase(newSessionResponse.getCompletion())) {
                 LOG.info("NewSessionResponse {}", newSessionResponse);
@@ -47,7 +45,6 @@ public class AkinabotLineMessageHandler {
                 redisTemplate.opsForHash().put(event.getSource().getUserId(), "stepinformation", newSessionResponse.getParameters().getStepInformation());
                 return new TextMessage(newSessionResponse.getParameters().getStepInformation().getQuestion());
             }
-
         } else {
             Map<Object, Object> sessionInfo = redisTemplate.opsForHash().entries(event.getSource().getUserId());
             if (!sessionInfo.isEmpty()) {
@@ -61,15 +58,13 @@ public class AkinabotLineMessageHandler {
                     ListResponse listResponse = akinatorApiService.getResult(identification, stepInformation);
                     String image = listResponse.getParameters().getElements().get(0).getElement().getAbsolutePicturePath();
                     String character = listResponse.getParameters().getElements().get(0).getElement().getPseudo();
-                    ImagemapBaseSize imagemapBaseSize = new ImagemapBaseSize(300, 300);
-                    ImageMessage imageMessage = new ImageMessage(image, image);
                     return new TextMessage(character);
                 } else {
                     return new TextMessage(answerResponse.getParameters().getQuestion());
                 }
             }
         }
-        return null;
+        return new TextMessage("Unrecognized Answer");
     }
 
 
