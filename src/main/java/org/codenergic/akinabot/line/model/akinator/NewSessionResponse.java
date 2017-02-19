@@ -43,4 +43,12 @@ public class NewSessionResponse {
 			this.stepInformation = stepInformation;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "NewSessionResponse{" +
+				"completion='" + completion + '\'' +
+				", parameters=" + parameters +
+				'}';
+	}
 }

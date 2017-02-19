@@ -5,10 +5,12 @@ import org.codenergic.akinabot.line.model.akinator.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.Future;
 
+@Component
 public class AkinatorApiService {
 
     @Autowired
