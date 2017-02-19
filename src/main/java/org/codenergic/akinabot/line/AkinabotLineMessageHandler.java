@@ -6,10 +6,7 @@ import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
-import org.codenergic.akinabot.line.model.akinator.AnswerResponse;
-import org.codenergic.akinabot.line.model.akinator.Identification;
-import org.codenergic.akinabot.line.model.akinator.NewSessionResponse;
-import org.codenergic.akinabot.line.model.akinator.StepInformation;
+import org.codenergic.akinabot.line.model.akinator.*;
 import org.codenergic.akinabot.line.service.AkinatorApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,33 +31,36 @@ public class AkinabotLineMessageHandler {
     private RedisTemplate<String, Object> redisTemplate;
 
     @EventMapping
-    public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) {
+    public TextMessage handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws InterruptedException {
         LOG.info("handleTextMessageEvent: {}", event);
         if (Akinabot.BUTTON_START.equalsIgnoreCase(event.getMessage().getText())) {
-            try {
+
                 NewSessionResponse newSessionResponse = akinatorApiService.sendOpenSession();
                 if ("OK".equalsIgnoreCase(newSessionResponse.getCompletion())) {
                     LOG.info("NewSessionResponse {}", newSessionResponse);
                     redisTemplate.opsForHash().put(event.getSource().getUserId(), "identification", newSessionResponse.getParameters().getIdentification());
                     redisTemplate.opsForHash().put(event.getSource().getUserId(), "stepinformation", newSessionResponse.getParameters().getStepInformation());
                     return new TextMessage(newSessionResponse.getParameters().getStepInformation().getQuestion());
-                } else {
-                    Map<Object, Object> sessionInfo = redisTemplate.opsForHash().entries(event.getSource().getUserId());
-                    if (!sessionInfo.isEmpty()) {
-                        Identification identification = (Identification) sessionInfo.get("identification");
-                        StepInformation stepInformation = (StepInformation) sessionInfo.get("stepinformation");
-                        AnswerResponse answerResponse = akinatorApiService.sendAnswer(identification, stepInformation, event.getMessage());
-                        redisTemplate.opsForHash().put(event.getSource().getUserId(), "identification", newSessionResponse.getParameters().getIdentification());
-                        redisTemplate.opsForHash().put(event.getSource().getUserId(), "stepinformation", newSessionResponse.getParameters().getStepInformation());
-                        return new TextMessage(answerResponse.getParameters().getQuestion());
-                    }
-
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+        } else {
+            Map<Object, Object> sessionInfo = redisTemplate.opsForHash().entries(event.getSource().getUserId());
+            if (!sessionInfo.isEmpty()) {
+                Identification identification = (Identification) sessionInfo.get("identification");
+                StepInformation stepInformation = (StepInformation) sessionInfo.get("stepinformation");
+                AnswerResponse answerResponse = akinatorApiService.sendAnswer(identification, stepInformation, event.getMessage());
+                stepInformation.setStep(answerResponse.getParameters().getStep());
+                stepInformation.setProgression(answerResponse.getParameters().getProgression());
+                redisTemplate.opsForHash().put(event.getSource().getUserId(), "stepinformation", stepInformation);
+                if (Integer.parseInt(stepInformation.getStep()) >= 30) {
+                    ListResponse listResponse = akinatorApiService.getResult(identification, stepInformation);
+                    LOG.info("Result {}", listResponse);
+                } else {
+                    return new TextMessage(answerResponse.getParameters().getQuestion());
+                }
             }
         }
-        return new TextMessage(event.getMessage().getText());
+        return null;
     }
 
     @EventMapping
